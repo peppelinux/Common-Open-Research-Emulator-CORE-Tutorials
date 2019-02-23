@@ -16,7 +16,7 @@ Follow these simple steps and get the base knowledge to use this wonderfull fram
     ````
     BRIFNAME=$(ifconfig | grep  "^b.[0-9]\{4\}.[a-z0-9]*"| awk -F' ' {'print $1'})
     ````    
-    To make this and other things persistent got o _Session -> Hooks_ and configure as follow in picture:
+    To make this and other things persistent go to _Session -> Hooks_ and configure as follow in picture:
     ![Alt text](images/create_runtimehook.png)
 
 3. Run this first test.
@@ -38,7 +38,7 @@ Follow these simple steps and get the base knowledge to use this wonderfull fram
 
 4. configure lan from your workstation with _firewall_router_. Remember that $BRIFNAME it's only a variable name, this will have a different value on your setup!
     - 4.1 `ifconfig $BRIFNAME 10.0.0.254/24` or `ip ad ch 10.0.0.254/24 dev $BRIFNAME`
-    - 4.2 ping _firewall_router_. Good news, a working layer2 was creted from your workstation to your CORE Network project!
+    - 4.2 ping _firewall_router_. Good news, a working layer2 was created from your workstation to your CORE Network project!
     - 4.3 Disable unecessary routing services
         ![Alt text](images/firewall-router_services.png)
     
