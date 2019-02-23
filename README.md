@@ -16,7 +16,7 @@ Follow these simple steps and get the base knowledge to use this wonderfull fram
     ````
     BRIFNAME=$(ifconfig | grep  "^b.[0-9]\{4\}.[a-z0-9]*"| awk -F' ' {'print $1'})
     ````    
-    To make this and other things persistent got to _Session -> Hooks_ and configure as follow in picture:
+    To make this and other things persistent got o _Session -> Hooks_ and configure as follow in picture:
     ![Alt text](images/create_runtimehook.png)
 
 3. Run this first test.
@@ -27,7 +27,7 @@ Follow these simple steps and get the base knowledge to use this wonderfull fram
     ![Alt text](images/3_testbridge_onlocalpc.png)
     
     
-    - 3.3 run `tcpdump -i $BRIFNAME` on your workstation, you will see traffic from the _firewall_router_.  Double click on _firewall_router_, it will open a terminal, see network its network interfaces and check its HWaddress, it's the same showned in the tcpdump stdout.
+    - 3.3 run `tcpdump -i $BRIFNAME` on your workstation, you will see traffic from the _firewall_router_.  Double click on _firewall_router_, it will open a terminal, see network the network interfaces and check its HWaddress, it's the same showned in the tcpdump stdout.
     ````
     tcpdump -i $BRIFNAME
     tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
