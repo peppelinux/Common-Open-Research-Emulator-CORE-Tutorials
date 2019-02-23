@@ -27,7 +27,7 @@ Follow these simple steps and get the base knowledge to use this wonderfull fram
     ![Alt text](images/3_testbridge_onlocalpc.png)
     
     
-    - 3.3 run `tcpdump -i $BRIFNAME` on your workstation, you will see traffic from the _firewall_router_.  Double click on _firewall_router_, it will open a terminal, see network the network interfaces and check its HWaddress, it's the same showned in the tcpdump stdout.
+    - 3.3 run `tcpdump -i $BRIFNAME` on your workstation, you will see traffic from the _firewall_router_.  Double click on _firewall_router_, it will open a terminal, see network the network interfaces and check its HWaddress, it's the same you get in the tcpdump stdout.
     ````
     tcpdump -i $BRIFNAME
     tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
@@ -36,7 +36,7 @@ Follow these simple steps and get the base knowledge to use this wonderfull fram
     16:53:44.446805 IP 0.0.0.0.bootpc > 255.255.255.255.bootps: BOOTP/DHCP, Request from 00:00:00:aa:00:00 (oui Ethernet), length 300
     ````
 
-4. configure lan from your workstation with _firewall_router_. Remeber that $BRIFNAME it's only a variable name, this will have a different value on your setup!
+4. configure lan from your workstation with _firewall_router_. Remember that $BRIFNAME it's only a variable name, this will have a different value on your setup!
     - 4.1 `ifconfig $BRIFNAME 10.0.0.254/24` or `ip ad ch 10.0.0.254/24 dev $BRIFNAME`
     - 4.2 ping _firewall_router_. Good news, a working layer2 was creted from your workstation to your CORE Network project!
     - 4.3 Disable unecessary routing services
@@ -44,15 +44,15 @@ Follow these simple steps and get the base knowledge to use this wonderfull fram
     
 5. Enable supernetting, _firewall_router_ must reach internet. All these task must be executed on your workstation.
     - 5.1 Enable ip_forward `echo 1 >  /proc/sys/net/ipv4/ip_forward`
-    - 5.2 NAT all the traffic from the bridge to internet using iptables. What's your ifname linked to internet? That is the output interface!
+    - 5.2 NAT all the traffic from the bridge to internet using iptables. What's your ifname linked to internet? That is the output interface:
         `iptables -t nat -A POSTROUTING -s 10.0.0.1 -o wlp2s0 -j MASQUERADE`
         10.0.0.1 is the ip of _firewall_router_, wlp2s0 is the wireless interface that I'm using on my workstation to reach internet
-    - 5.3 tell to _firewall_router_ its brancd new default gateway, add it:
+    - 5.3 Tell to _firewall_router_ its default gateway, add it:
         `route add default gw 10.0.0.254`
     - 5.4 from "firewall-route" test a foreign `ping to 8.8.8.8` for example, you must see it work! Made persistent this route.
         ![Alt text](images/4_router_defgw_persistent.png)
 
-6. Make persistent configuration with _firewall_router_ and CORE Network hook services:
+6. Make persistent configuration in _firewall_router_ with CORE Network hook services:
     - 6.1 Also update resolv.conf into _firewall_router_ if you need it
         ![Alt text](images/4_router_resolvconf_persistent.png)
         ![Alt text](images/4_router_resolvconf_persistent_2.png)
