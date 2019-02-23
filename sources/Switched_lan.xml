@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scenario compiled="true" name="Switched_lan.xml" version="1.0" xmlns="nmfPlan" xmlns:CORE="coreSpecific">
-  <network id="net0" name="net0">
-    <type>ethernet</type>
-    <alias domain="COREID">60512</alias>
-    <member type="interface">enp1s0/enp1s0</member>
-    <member type="interface">firewall-router/eth0</member>
-    <member type="channel">net0/chan0</member>
-    <channel id="net0/chan0" name="chan0">
-      <type>ethernet</type>
-      <member index="0" type="interface">enp1s0/enp1s0</member>
-      <member index="1" type="interface">firewall-router/eth0</member>
-    </channel>
-  </network>
+<scenario compiled="true" deployed="true" name="Switched_lan.imn" version="1.0" xmlns="nmfPlan" xmlns:CORE="coreSpecific">
   <network id="Aswitch" name="Aswitch">
     <point lat="47.5750401459" lon="-122.128061987" type="gps"/>
     <type>ethernet</type>
@@ -66,24 +54,36 @@
       <member index="1" type="interface">Bswitch/Bswitch/e1</member>
     </channel>
   </network>
+  <network id="net0" name="net0">
+    <type>ethernet</type>
+    <alias domain="COREID">25818</alias>
+    <member type="interface">enp1s0/enp1s0</member>
+    <member type="interface">firewall-router/eth0</member>
+    <member type="channel">net0/chan0</member>
+    <channel id="net0/chan0" name="chan0">
+      <type>ethernet</type>
+      <member index="0" type="interface">enp1s0/enp1s0</member>
+      <member index="1" type="interface">firewall-router/eth0</member>
+    </channel>
+  </network>
   <router id="firewall-router" name="firewall-router">
     <type domain="CORE">router</type>
     <interface id="firewall-router/eth0" name="eth0">
       <member index="1" type="channel">net0/chan0</member>
       <member type="network">net0</member>
-      <address type="mac">00:00:00:aa:00:05</address>
+      <address type="mac">00:00:00:aa:00:00</address>
       <address type="IPv4">10.0.0.1/24</address>
     </interface>
     <interface id="firewall-router/eth1" name="eth1">
       <member index="0" type="channel">Aswitch/chan0</member>
       <member type="network">Aswitch</member>
-      <address type="mac">00:00:00:aa:00:06</address>
+      <address type="mac">00:00:00:aa:00:01</address>
       <address type="IPv4">10.0.1.254/24</address>
     </interface>
     <interface id="firewall-router/eth2" name="eth2">
       <member index="0" type="channel">Bswitch/chan0</member>
       <member type="network">Bswitch</member>
-      <address type="mac">00:00:00:aa:00:07</address>
+      <address type="mac">00:00:00:aa:00:02</address>
       <address type="IPv4">10.0.2.254/24</address>
     </interface>
     <alias domain="COREID">1</alias>
@@ -135,6 +135,7 @@ iptables -t nat -A POSTROUTING -s 10.0.2.0/24 -o eth0 -j MASQUERADE
         <command type="start">sh firewall.sh</command>
       </service>
     </CORE:services>
+    <mapping ref="TestBed/yogurt/firewall-router" type="testHost"/>
   </router>
   <host id="enp1s0" name="enp1s0">
     <type domain="CORE">rj45</type>
@@ -144,17 +145,18 @@ iptables -t nat -A POSTROUTING -s 10.0.2.0/24 -o eth0 -j MASQUERADE
     </interface>
     <alias domain="COREID">2</alias>
     <point lat="47.5765234137" lon="-122.126102602" type="gps"/>
+    <mapping ref="TestBed/yogurt/enp1s0" type="testHost"/>
   </host>
   <host id="A1" name="A1">
     <type domain="CORE">PC</type>
     <interface id="A1/eth0" name="eth0">
       <member index="0" type="channel">Aswitch/chan1</member>
       <member type="network">Aswitch</member>
-      <address type="mac">00:00:00:aa:00:08</address>
+      <address type="mac">00:00:00:aa:00:03</address>
       <address type="IPv4">10.0.1.1/24</address>
     </interface>
     <alias domain="COREID">5</alias>
-    <point lat="47.5742376939" lon="-122.129032674" type="gps"/>
+    <point lat="47.5742375425" lon="-122.129012732" type="gps"/>
     <CORE:services name="A1">
       <service custom="True" name="DefaultRoute" startup_idx="80">
         <file name="defaultroute.sh">
@@ -165,13 +167,14 @@ ip route add default via 10.0.1.254
         <command type="start">sh defaultroute.sh</command>
       </service>
     </CORE:services>
+    <mapping ref="TestBed/yogurt/A1" type="testHost"/>
   </host>
   <host id="B1" name="B1">
     <type domain="CORE">PC</type>
     <interface id="B1/eth0" name="eth0">
       <member index="0" type="channel">Bswitch/chan1</member>
       <member type="network">Bswitch</member>
-      <address type="mac">00:00:00:aa:00:09</address>
+      <address type="mac">00:00:00:aa:00:04</address>
       <address type="IPv4">10.0.2.1/24</address>
     </interface>
     <alias domain="COREID">6</alias>
@@ -186,6 +189,7 @@ ip route add default via 10.0.2.254
         <command type="start">sh defaultroute.sh</command>
       </service>
     </CORE:services>
+    <mapping ref="TestBed/yogurt/B1" type="testHost"/>
   </host>
   <CORE:defaultservices>
     <device type="router">
@@ -201,22 +205,45 @@ ip route add default via 10.0.2.254
   </CORE:defaultservices>
   <CORE:sessionconfig>
     <origin alt="2.0" lat="47.5791667" lon="-122.132322" scale100="150.0"/>
-    <options>
-      <parameter name="enablerj45">0</parameter>
-    </options>
     <hooks>
       <hook name="runtime_hook.sh" state="4">#!/bin/sh
 # session hook script; write commands here to execute on the host at the
 # specified state
 
 BRIFNAME=$(ifconfig | grep  &quot;^b.[0-9]\{4\}.[a-z0-9]*&quot;| awk -F' ' {'print $1'})
-ifconfig $BRIFNAME  10.0.0.254/24
-
-iptables -t nat -A POSTROUTING -s 10.0.0.1 -o wlp2s0 -j MASQUERADE</hook>
+WANIFNAME='wlp2s0'
+ifconfig $BRIFNAME 10.0.0.254/24
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -s 10.0.0.1 -o $WANIFNAME -j MASQUERADE</hook>
     </hooks>
     <metadata>
       <parameter name="global_options">interface_names=no ip_addresses=yes ipv6_addresses=yes node_labels=yes link_labels=yes show_api=no background_images=no annotations=yes grid=yes traffic_start=0</parameter>
       <parameter name="canvas c1">{name {Canvas1}}</parameter>
     </metadata>
   </CORE:sessionconfig>
+  <container id="TestBed" name="TestBed">
+    <testHost id="TestBed/yogurt" name="yogurt">
+      <type>physical</type>
+      <address type="IPv4">192.168.1.23/24</address>
+      <address type="IPv4">10.87.7.127/24</address>
+      <address type="IPv4">10.0.0.254/24</address>
+      <testHost id="TestBed/yogurt/firewall-router" name="firewall-router">
+        <type>virtual</type>
+        <address type="IPv4">10.0.0.1/24</address>
+        <address type="IPv4">10.0.1.254/24</address>
+        <address type="IPv4">10.0.2.254/24</address>
+      </testHost>
+      <testHost id="TestBed/yogurt/enp1s0" name="enp1s0">
+        <type>virtual</type>
+      </testHost>
+      <testHost id="TestBed/yogurt/A1" name="A1">
+        <type>virtual</type>
+        <address type="IPv4">10.0.1.1/24</address>
+      </testHost>
+      <testHost id="TestBed/yogurt/B1" name="B1">
+        <type>virtual</type>
+        <address type="IPv4">10.0.2.1/24</address>
+      </testHost>
+    </testHost>
+  </container>
 </scenario>

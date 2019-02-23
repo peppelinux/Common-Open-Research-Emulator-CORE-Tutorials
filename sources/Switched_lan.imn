@@ -170,8 +170,8 @@ node n5 {
 	!
     }
     canvas c1
-    iconcoords {169.0 366.0}
-    labelcoords {169.0 398.0}
+    iconcoords {170.0 366.0}
+    labelcoords {170.0 398.0}
     interface-peer {eth0 n3}
     services {DefaultRoute}
     custom-config {
@@ -261,9 +261,10 @@ hook 4:runtime_hook.sh {
 # specified state
 
 BRIFNAME=$(ifconfig | grep  "^b.[0-9]\{4\}.[a-z0-9]*"| awk -F' ' {'print $1'})
-ifconfig $BRIFNAME  10.0.0.254/24
-
-iptables -t nat -A POSTROUTING -s 10.0.0.1 -o wlp2s0 -j MASQUERADE
+WANIFNAME='wlp2s0'
+ifconfig $BRIFNAME 10.0.0.254/24
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -s 10.0.0.1 -o $WANIFNAME -j MASQUERADE
 }
 
 option global {
@@ -280,6 +281,5 @@ option global {
 }
 
 option session {
-    enablerj45=0
 }
 
