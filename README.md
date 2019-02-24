@@ -100,3 +100,11 @@ TODO
 ----
 - Make the tasks described in _8._ without iptables but using _Linux Advanced Routing and blackholes_.
 - Please contribute, suggest other basic use cases, opening an Issue or Pull Request.
+
+
+Resources
+---------
+
+- http://www.brianlinkletter.com/core-network-emulator-test-drive/
+- http://www.brianlinkletter.com/core-network-emulator-services-overview/
+- http://www.brianlinkletter.com/core-network-emulator-install-network-services/
